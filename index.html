@@ -301,7 +301,33 @@ var BASE=[
 [T.adsl,"En la tecnología de acceso a internet xDSLx se logra el incremento de velocidad hasta 100 Mbps solamente con la implementación FTTH",VF,1,"Es falsa: el incremento de velocidad hasta 100 Mbps o más se logra con VDSL2 sobre el cableado de cobre existente, que no requiere FTTH."],
 [T.seg,"¿Cómo logro proteger la información frente a escuchas indeseadas?",["Atenuándola","Autenticándola","Firmándola digitalmente","Digitalizándola","Encriptando la información"],4],
 [T.lan,"Indique cuáles de los siguientes dispositivos se considera que cumplen las funciones de la capa de RED",["Firewall","Switch","Access Point","Router","Modem telefónico","Placa de Interfaz de red (NIC)","Hub"],3],
-[T.adsl,"ADSL utiliza la porción del espectro que va desde:",["160 a 1100 [KHz]","4 a 1100 [KHz]","200 a 1100 [KHz]","26 a 1104 [KHz]"],3]
+[T.adsl,"ADSL utiliza la porción del espectro que va desde:",["160 a 1100 [KHz]","4 a 1100 [KHz]","200 a 1100 [KHz]","26 a 1104 [KHz]"],3],
+[T.osi,"A qué nivel OSI corresponden las funciones de encaminamiento",["El nivel de sesión","El nivel de enlace","El nivel de transporte","El nivel de red"],3],
+[T.cod,"CRC es una conocida técnica de detección de errores que trabaja como un código convolucional",VF,1],
+[T.adsl,"Se realiza una transmisión de datos a través de la tecnología ADSL, a una velocidad de 0,96 Mbps, con una relación señal ruido de (S/N) = 37 dB. ¿Cuántos canales DMT utiliza?",["25","26","30","27","23","Ninguna es correcta"],0],
+[T.adsl,"La tecnologías ADSL utiliza CAP (modulación por amplitud y fase sin portadora)",VF,1],
+[T.osi,"¿Cuál es la capa que gestiona el control del diálogo?",["Capa de sesión","Capa de enlace de datos","Capa de transporte","Capa de red"],0,"El banco no mostraba la respuesta correcta; esta es la que corresponde por teoría (capa 5: establece, mantiene y cierra el diálogo)."],
+[T.senal,"Una compañía de comunicaciones desea realizar un estudio de requerimientos de una red que transmita películas bajo la modalidad de paga por ver (PPV): 24 fotogramas por segundo, cada fotograma en blanco y negro HD de 1280 x 720 pixeles, codificando el brillo de cada punto con 1024 niveles distintos. ¿Qué velocidad de transmisión sostenida (en Mb/s) debe soportar la red, sin compresión? (indicar solo el valor, sin unidades)",["221,9","221","225","230","Ninguna es correcta"],0,"El banco marca 221,9 como correcta. Ojo: 24 × 1280 × 720 × 10 bits da 221,18 Mb/s; verificá con tu cátedra cómo lo calculan."],
+[T.adsl,"Indique cuáles de las siguientes afirmaciones son verdaderas respecto del acceso a internet por ADSL: (una o más)",["El elemento que permite este tipo de acceso se denomina Switch y se encuentra en la central telefónica.","Este tipo de acceso a Internet tiene una tarifa plana, esto es independiente de la cantidad de MBytes consumidos por mes.","Acceso a Internet por ADSL se implementa en Redes de Conmutación de paquetes","El acceso a Internet por ADSL se implementa en Redes de Conmutación de circuitos","Acceso a internet por ADSL se implementa en Redes de CATV","Este tipo de acceso a Internet tiene una tarifa proporcional a la cantidad de MBytes consumidos por hora","El elemento que permite este tipo de acceso se denomina DSLAM y se encuentra en la central telefónica.","Este tipo de acceso a Internet permite tasas de transferencia de hasta 1 Gb/s","El acceso hasta el abonado se implementa sobre el mismo plantel exterior utilizado para brindar servicio al abonado telefónico.","Este tipo de acceso a Internet permite tasas de transferencia de hasta 20 Mb/s."],[1,2,6,8,9]],
+[T.osi,"Marcá los protocolos de la capa de aplicación (modelo TCP/IP)",["DNS","UDP","HTTP","IP","SMTP","TCP","Ethernet","IEEE 802.11","ICMP"],[0,2,4]],
+[T.osi,"Marcá los protocolos de la capa de transporte (modelo TCP/IP)",["DNS","UDP","HTTP","IP","SMTP","TCP","Ethernet","IEEE 802.11","ICMP"],[1,5]],
+[T.osi,"Marcá los protocolos de la capa de interred (modelo TCP/IP)",["DNS","UDP","HTTP","IP","SMTP","TCP","Ethernet","IEEE 802.11","ICMP"],[3,8]],
+[T.osi,"Marcá los protocolos de la capa de acceso a la red (modelo TCP/IP)",["DNS","UDP","HTTP","IP","SMTP","TCP","Ethernet","IEEE 802.11","ICMP"],[6,7]],
+[T.cab,"El ______ es el acoplamiento de señal de un par de un cable sobre otro par del mismo cable.",["FEXT","ANEXT","NEXT","PSNEXT","Delay Skew","ACR"],2],
+[T.cab,"El ______ es el acoplamiento de señal de un cable sobre otro próximo. Esto sucede si un cable está rodeado por muchos otros cables en un paquete.",["FEXT","ANEXT","NEXT","PSNEXT","Delay Skew","ACR"],1,"Respuesta armada según la definición (diafonía exógena o Alien NEXT); el banco mostraba esto como grilla."],
+[T.cod,"Un código de línea es un patrón de [1], [2] o [3] utilizados para representar datos [4] transmitidos por [5]. Marcá los 5 términos correctos.",["Analógicos","Potencia","Línea de transmisión","Continua","Tensión","Impedancia","Un medio de almacenamiento","Fotones","Digitales","Un canal de radiocomunicación","Un bus de datos","Aleatorios","Sincronismo","Corriente"],[2,4,7,8,13],"Armada con la definición estándar: patrón de tensión, corriente o fotones para representar datos digitales transmitidos por una línea de transmisión."],
+[T.osi,"En el modelo TCP/IP, ¿cómo se llama la unidad de datos de la capa de aplicación?",["Segmentos","Tramas","Paquetes","Señales","Mensaje"],4,"Armada según el modelo TCP/IP (en el banco era una grilla): aplicación = mensaje, transporte = segmentos, interred = paquetes, acceso a la red = tramas, física = señales."],
+[T.osi,"En el modelo TCP/IP, ¿cómo se llama la unidad de datos de la capa de transporte?",["Segmentos","Tramas","Paquetes","Señales","Mensaje"],0],
+[T.osi,"En el modelo TCP/IP, ¿cómo se llama la unidad de datos de la capa de interred?",["Segmentos","Tramas","Paquetes","Señales","Mensaje"],2],
+[T.osi,"En el modelo TCP/IP, ¿cómo se llama la unidad de datos de la capa de acceso a la red?",["Segmentos","Tramas","Paquetes","Señales","Mensaje"],1],
+[T.osi,"En el modelo TCP/IP, ¿cómo se llama la unidad de datos de la capa física?",["Segmentos","Tramas","Paquetes","Señales","Mensaje"],3],
+[T.adsl,"Un usuario realiza una transmisión de datos utilizando la tecnología de acceso a internet ADSL, a una velocidad de 0.96 Mbps. La relación S/N del canal es de 37 dB. ¿El diagrama que se muestra a continuación representa la tecnología completa de la red ADSL utilizada?",VF,1,"En el centro dice CMTS, debería ser BAS.",true],
+[T.adsl,"Un usuario realiza una transmisión de datos utilizando la tecnología de acceso a internet ADSL, a una velocidad de 0.96 Mbps. La relación S/N del canal es de 37 dB. El diagrama del hardware del modem involucrado en la transmisión que se muestra a continuación, ¿es verdadero o falso?",VF,1,"",true],
+[T.cab,"Observe la figura adjunta e indique la presencia o no de algunas de las siguientes perturbaciones",["Jitter","Ninguna","Atenuación","Ruido","ISI"],3,"",true],
+[T.cab,"Al observar el siguiente diagrama de ojo, ¿cuántos niveles de tensión podemos asegurar que posee el código de banda base de la señal recibida?",["M = 4","Ninguna es correcta","M = 7","M = 8","M = 5"],3,"",true],
+[T.cab,"Determine cuál de las siguientes capturas de pantalla de un osciloscopio muestra una señal con ISI",["El gráfico B","El gráfico C","Los gráficos A y C","El gráfico A"],2,"",true],
+[T.cab,"Indicar a qué tipo de perturbación hace referencia la siguiente figura",["Mapa de cableado incorrecto","Interferencias electromagnéticas externas (EMI)","PSNEXT","PSFEXT","ANEXT"],4,"",true],
+[T.senal,"Indique cuál de las siguientes figuras corresponde al espectro de una señal digital constituida por un tren de pulsos rectangulares periódicos",["Ninguna es correcta","c","b","a"],3,"",true]
 ];
 /*BANK_END*/
 
@@ -331,14 +357,15 @@ function norm(o){
     tema:(typeof o.tema==='string'&&o.tema.trim())?o.tema.trim():'General',
     pregunta:o.pregunta,opciones:op,correcta:c,multi:multi,
     imagen:(typeof o.imagen==='string'&&o.imagen)?o.imagen:'',
-    nota:(typeof o.nota==='string'&&o.nota)?o.nota:''
+    nota:(typeof o.nota==='string'&&o.nota)?o.nota:'',
+    fig:!!o.fig
   };
 }
 
 function buildBank(){
   var list=[],seen={};
   BASE.forEach(function(r){
-    var q=norm({tema:r[0],pregunta:r[1],opciones:r[2],correcta:r[3],nota:r[4]});
+    var q=norm({tema:r[0],pregunta:r[1],opciones:r[2],correcta:r[3],nota:r[4],fig:r[5]});
     if(q&&!seen[q.id]){seen[q.id]=1;list.push(q)}
   });
   LS.get('qz_extra',[]).forEach(function(o){
@@ -409,6 +436,7 @@ function vQuiz(){
         '<div class="bar"><i style="width:'+Math.round(done*100/tot)+'%"></i></div>'+
         '<span class="tag">'+esc(q.tema)+(s.mode==='repaso'?' · repaso':'')+'</span>';
   if(q.imagen)h+='<img class="qimg" src="'+esc(q.imagen)+'" alt="Imagen de la pregunta" onerror="this.style.display=\'none\'">';
+  if(q.fig)h+='<p class="hint" style="color:#fbbf24">⚠️ Esta pregunta tiene una figura que no se pudo extraer del formulario. Respondela con lo que recordás de la figura.</p>';
   h+='<p class="q">'+esc(q.pregunta)+'</p>';
   if(q.multi&&!a)h+='<p class="hint">Hay más de una respuesta correcta: marcá todas y tocá “Confirmar”.</p>';
   s.ord[q.id].forEach(function(oi,pos){
