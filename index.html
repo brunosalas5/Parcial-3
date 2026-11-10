@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Preguntero COM">
+<meta name="format-detection" content="telephone=no">
+<meta name="theme-color" content="#0b1220">
+<title>Preguntero Comunicaciones</title>
+<style>
+:root{--bg:#0b1220;--card:#151e30;--card2:#1b2740;--line:#2a3855;--tx:#e8edf7;--mu:#93a0b8;--pri:#3b82f6;--pri2:#2563eb;--ok:#22c55e;--okbg:#0f3d27;--okt:#bbf7d0;--bad:#ef4444;--badbg:#4a1a1a;--badt:#fecaca}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{min-height:100vh;min-height:100dvh}
+#app{max-width:640px;margin:0 auto;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;
+  padding:calc(env(safe-area-inset-top) + 14px) calc(env(safe-area-inset-right) + 16px) calc(env(safe-area-inset-bottom) + 20px) calc(env(safe-area-inset-left) + 16px)}
+h1{font-size:30px;line-height:1.1;margin:6px 0 18px;font-weight:800}
+h1 span{display:block;font-size:15px;font-weight:500;color:var(--mu);margin-top:6px}
+h2{font-size:22px;margin:4px 0 12px}
+p{margin:0 0 10px;line-height:1.45}
+.mu{color:var(--mu);font-size:15px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px}
+.lbl{display:block;font-size:14px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px}
+.sp{height:10px}
+button{font:inherit;color:inherit;-webkit-appearance:none;appearance:none;border:0;background:none;padding:0;margin:0;touch-action:manipulation;-webkit-user-select:none;user-select:none;cursor:pointer}
+.btn{display:block;width:100%;min-height:54px;padding:14px 18px;border-radius:14px;font-size:17px;font-weight:700;text-align:center;background:var(--pri2);color:#fff}
+.btn:active{opacity:.7}
+.btn.sec{background:var(--card2);border:1px solid var(--line);font-weight:600}
+.btn.danger{background:#7f1d1d}
+.btn[disabled]{opacity:.35;pointer-events:none}
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.chip{min-height:50px;border-radius:12px;background:var(--card2);border:2px solid var(--line);font-size:17px;font-weight:700}
+.chip.on{border-color:var(--pri);background:#13264a;color:#bfdbfe}
+.chip:active{opacity:.7}
+select,textarea{width:100%;font-size:17px;color:var(--tx);background:var(--card2);border:2px solid var(--line);border-radius:12px;padding:13px;font-family:inherit;-webkit-appearance:none;appearance:none}
+select{min-height:52px;background-image:linear-gradient(45deg,transparent 50%,var(--mu) 50%),linear-gradient(135deg,var(--mu) 50%,transparent 50%);background-position:calc(100% - 22px) 50%,calc(100% - 16px) 50%;background-size:6px 6px,6px 6px;background-repeat:no-repeat;padding-right:40px}
+textarea{min-height:200px;font-family:ui-monospace,Menlo,monospace;font-size:16px;line-height:1.35}
+.tog{display:flex;align-items:center;gap:12px;min-height:48px;font-size:16px;margin-top:14px}
+.tog input{width:26px;height:26px;flex:0 0 26px;accent-color:var(--pri)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.back{min-height:44px;min-width:44px;padding:0 14px 0 4px;font-size:17px;color:#93c5fd;font-weight:600}
+.score{font-size:15px;color:var(--mu);font-weight:600}
+.score b{color:var(--tx)}
+.bar{height:8px;border-radius:99px;background:var(--card2);overflow:hidden;margin-bottom:16px}
+.bar i{display:block;height:100%;background:var(--pri);border-radius:99px;transition:width .25s}
+.tag{display:inline-block;font-size:13px;font-weight:700;color:#93c5fd;background:#13264a;border-radius:99px;padding:4px 10px;margin-bottom:10px}
+.q{font-size:19px;font-weight:650;line-height:1.4;margin:0 0 14px}
+.qimg{display:block;max-width:100%;max-height:42vh;height:auto;width:auto;margin:0 auto 14px;border-radius:12px;background:#fff;object-fit:contain}
+.hint{font-size:14px;color:var(--mu);margin:-4px 0 12px}
+.opt{display:flex;align-items:flex-start;gap:12px;width:100%;min-height:56px;padding:13px 14px;margin:0 0 10px;border-radius:14px;background:var(--card);border:2px solid var(--line);text-align:left;font-size:17px;line-height:1.35}
+.opt .k{flex:0 0 28px;height:28px;border-radius:50%;border:2px solid var(--mu);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--mu)}
+.opt.multi .k{border-radius:8px}
+.opt .t{flex:1;min-width:0;overflow-wrap:anywhere}
+.opt:active{background:var(--card2)}
+.opt.sel{border-color:var(--pri);background:#13264a}
+.opt.sel .k{background:var(--pri);border-color:var(--pri);color:#fff}
+.opt.ok{border-color:var(--ok);background:var(--okbg);color:var(--okt)}
+.opt.ok .k{background:var(--ok);border-color:var(--ok);color:#052e16}
+.opt.bad{border-color:var(--bad);background:var(--badbg);color:var(--badt)}
+.opt.bad .k{background:var(--bad);border-color:var(--bad);color:#fff}
+.opt.miss{border-style:dashed;border-color:var(--ok);background:var(--okbg);color:var(--okt)}
+.opt.miss .k{border-color:var(--ok);color:var(--ok)}
+.locked{pointer-events:none}
+.fb{border-radius:14px;padding:12px 14px;margin:4px 0 12px;font-size:16px;line-height:1.4;border:1px solid}
+.fb.ok{background:var(--okbg);border-color:var(--ok);color:var(--okt)}
+.fb.bad{background:var(--badbg);border-color:var(--bad);color:var(--badt)}
+.fb b{font-size:17px}
+.fb .nota{margin-top:8px;font-size:15px;opacity:.95;border-top:1px solid rgba(255,255,255,.18);padding-top:8px}
+.foot{position:sticky;bottom:0;margin-top:auto;padding:12px 0 2px;background:linear-gradient(rgba(11,18,32,0),var(--bg) 28%)}
+.big{font-size:56px;font-weight:800;text-align:center;margin:6px 0 0}
+.wrong{border-top:1px solid var(--line);padding:12px 0;font-size:15px;line-height:1.4}
+.wrong:first-child{border-top:0}
+.wrong .a{color:var(--badt)}
+.wrong .c{color:var(--okt)}
+.msg{border-radius:12px;padding:12px;margin:12px 0;font-size:15px;line-height:1.4}
+.msg.ok{background:var(--okbg);color:var(--okt)}
+.msg.err{background:var(--badbg);color:var(--badt)}
+pre{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:13px;line-height:1.35;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 0 12px;white-space:pre}
+.small{font-size:13px;color:var(--mu);text-align:center;margin-top:6px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+(function(){
+'use strict';
+
+/* ==========================================================
+   BANCO DE PREGUNTAS
+   Formato compacto: [tema, pregunta, [opciones], correcta, nota?]
+   - correcta = número (una sola opción correcta, índice desde 0)
+   - correcta = array [0,2] (selección múltiple)
+   Para agregar más preguntas podés pegar acá abajo nuevas filas
+   o usar la pantalla "Agregar preguntas" dentro de la app.
+   ========================================================== */
+/*BANK_START*/
+var T={
+  osi:"Modelo OSI y capas",
+  conm:"Conmutación y tipos de red",
+  adsl:"ADSL / xDSL / DSLAM",
+  cable:"Cable Modem / CATV / DOCSIS",
+  dial:"Dial Up y telefonía",
+  fibra:"Fibra óptica y FTTx",
+  lan:"LAN, Ethernet, Wi-Fi y WiMax",
+  senal:"Señales, dB y cálculos",
+  cab:"Cableado y perturbaciones",
+  seg:"Seguridad y criptografía",
+  cod:"Códigos y detección de errores",
+  wan:"Protocolos de enlace y WAN"
+};
+var VF=["Verdadero","Falso"];
+var BASE=[
+[T.adsl,"El DSLAM es un dispositivo que permite interconectar la última milla con el ISP",VF,0],
+[T.cable,"Indique cuáles son los niveles de OSI involucrados en la última milla de la tecnología Cable Modem:",["Nivel 1","Nivel 2","Nivel 3","Ninguna es correcta","Todos los niveles"],[0,1]],
+[T.wan,"Las principales características de ATM son:",["Trabaja en modo no orientado a conexión","Hay control de flujo y recuperación de errores","Tiene sobrecarga en la cabecera para permitir altas velocidades de conmutación"],2],
+[T.dial,"Un Modem Dial Up está conectado, individualmente a la central a través del tramo de red que se denomina última milla, por lo tanto, no es necesario establecer el enlace",VF,1],
+[T.dial,"El estándar RS232 contempla una codificación de “0” binario del [-3-25] volts",VF,1],
+[T.adsl,"El ATU-R dispone de 32 subportadoras para transmitir",VF,0],
+[T.cable,"El enlace entre el CMTS y el Modem de usuario en la tecnología de acceso a internet de última milla Cable Modem es:",["Un enlace punto a punto","Un enlace conmutado por circuito","Un enlace compartido"],2],
+[T.lan,"¿Qué estándar utiliza la tecnología de acceso a internet de última milla inalámbrica WiMax que permite enlace con dispositivos de alta movilidad?",["802.2","IEEE802.11ax","IEEE802.16","4G LTE","802.1e","IEEE802.3"],2,"WiMax fijo usa IEEE 802.16d; WiMax móvil usa IEEE 802.16e. Ambos pertenecen a la familia 802.16 (Wireless MAN). Si la pregunta fuera “¿Qué tecnología 4G permite alta movilidad?”, la respuesta sería 4G LTE."],
+[T.conm,"La conmutación de circuitos implica:",["Camino virtual, transferencia y liberación","Establecimiento del circuito, transmisión de datos y desconexión","Hay un circuito previamente establecido"],1],
+[T.cable,"El enlace del CMTS hacia el modem del usuario es:",["Enlace compartido","Ninguna es correcta","Enlace punto a punto"],0,"El CMTS es uno solo y abastece a todos los usuarios: es un enlace compartido mediante paquetes MPEG-2. El módem del usuario toma la cabecera de los paquetes para saber si le corresponden y además debe competir por el medio para poder transmitir."],
+[T.cod,"¿Cuál será la palabra código transmitida para un sistema que utiliza código ASCII y transmite la letra k (6b)16 con polinomio generador x^3 + x + 1?",["01101011110","0100101011110","01101011111","0110101111110"],0,"Se agregan 3 ceros al mensaje 01101011 y se divide módulo 2 por 1011; el resto (110) se concatena al mensaje."],
+[T.osi,"¿Cuál es el nombre de la PDU de capa 2 del modelo OSI?",["Trama","Segmento","Paquete","MAC"],0],
+[T.adsl,"El splitter conecta las señales de alta frecuencia con el sistema POTS y las señales de baja frecuencia con el sistema ADSL",VF,1],
+[T.lan,"¿Qué dispositivo necesito si deseo instalar una LAN?",["Fibra óptica","Switch","Extensor","Cable coaxil","Firewall"],1],
+[T.osi,"El modelo OSI es:",["Un estándar de comunicaciones","Un lineamiento funcional para las tareas de comunicaciones","Una norma de aplicación"],1],
+[T.seg,"En una VPN site to site, ¿quién crea el túnel en un extremo?",["Los distintos usuarios que pertenecen a la LAN","El modem de conexión a internet","El router de conexión a internet","El switch de cada departamento de trabajo que necesite seguridad","Un SW especial en la estación de trabajo"],2],
+[T.conm,"Para el sistema de comunicaciones de voz por red fija (Servicio Telefónico Básico), indicar cuáles de las siguientes clasificaciones es correcta:",["Duplex","LAN","Banda ancha","Simplex","MAN","Banda angosta","Grupo cerrado de usuarios (privado)","Por difusión (broadcast)","Conmutado por circuitos","Servicio público","WAN"],[0,5,8,9,10]],
+[T.adsl,"La transmisión entre el DSLAM y el ATU-R es digital",VF,1,"La transmisión DSLAM–ATU-R es analógica; la digital es la que va entre el DSLAM y el BAS."],
+[T.senal,"Una señal es 28 dB menor en potencia que otra señal. ¿Cuántas veces menor es? (Indicar solo valores numéricos, sin signos ni unidades)",["640","800","Ninguna es correcta","630","631"],4,"10^(28/10) ≈ 631."],
+[T.adsl,"En la tecnología de acceso a internet ADSL la última milla está definida entre el ATU-R y el BAS",VF,1],
+[T.conm,"En los servicios orientados a conexión:",["Es necesaria la confirmación de los datos recibidos","En el handshake solo interviene el receptor","Se establece una conexión física previa","Se establece un “handshake” entre emisor y receptor","No se establece una conexión física previa","En el handshake solo interviene el emisor"],[2,3],"“Es necesaria la confirmación de los datos recibidos” también es verdadera en teoría (fiabilidad con acuse de recibo), pero el banco no la marca como correcta. En pregunteros de años anteriores no la optaron."],
+[T.cab,"El NEXT es la interferencia de la señal de un par sobre otro dentro del mismo cable, medida en el extremo lejano del emisor",VF,1,"El NEXT se mide en el extremo cercano al emisor; en el extremo lejano se mide el FEXT."],
+[T.adsl,"¿Cuál de estas aseveraciones es correcta?",["La función del DSLAM es multiplexar la transmisión de datos hacia la red de última milla","El DSLAM es el dispositivo que permite interconectar la última milla con el ISP","El Splitter conecta las señales de alta frecuencia con el sistema POTS y las señales de baja frecuencias con el sistema ADSL","El DSLAM dispone de una menor cantidad de ATU-C para atender la demanda de los ATU-R, por lo tanto primero se debe establecer el enlace entre ATU-R y el ATU-C antes de enviar los datos"],1],
+[T.osi,"En el modelo OSI las capas se dividen en:",["Capas físicas, capas 1, 2 y 3, capa de control capa 4 y capas de aplicación 5, 6 y 7","Servicios de red, capas 1, 2 y 3, servicio de control capas 4 y 5 y servicios de usuario capas 6 y 7","Servicios de transporte capas 1, 2, 3 y 4, Servicios de soporte al usuario capas 5, 6, 7"],1],
+[T.senal,"Una señal de comunicaciones que viene caracterizada por la ecuación s(t)=10.sen(2.pi.300+fase) tiene una longitud de onda (en kilómetros) de: (indicar sólo números)",["1000000","1000","100000","100"],1,"λ = c / f = 300.000 km/s ÷ 300 Hz = 1000 km."],
+[T.conm,"¿Cómo se clasifican las redes según el tipo de transmisión?",["Redes PAN, LAN, MAN, WAN","Redes punto a punto y de difusión","Ninguna es correcta","Redes públicas y privadas"],1],
+[T.lan,"¿Cuál de los siguientes dispositivos permite la creación de VLAN por asignación de puertos?",["Hub","Access Point","Amplificador","Extensor Wi-Fi","Switch"],4],
+[T.fibra,"En caso de querer implementar una red de acceso FTTC sobre la red telefónica existente, indique cuáles de las siguientes opciones es o son correctas:",["Está montado sobre una red óptica totalmente pasiva","Se pueden lograr hasta el abonado tasas de bits de 2 Gb/seg","Se deberá reemplazar el cableado de la red primaria de plantel exterior","Se deberá llegar con Fibra Óptica hasta las instalaciones del abonado","Se deberá instalar alguna unidad conversora óptica / eléctrica en algún armario subrepartidor del plantel exterior"],[2,4]],
+[T.adsl,"Indique cuáles son los niveles de OSI involucrados en la última milla de la tecnología xDSLx:",["Todas son correctas","Nivel 2","Nivel 1","Nivel 3"],2],
+[T.osi,"Dentro del modelo OSI, ¿cuál es la capa que se ocupa de la semántica, compresión y criptografía de los datos?",["Capa de transporte","Capa física","Capa de presentación","Capa de enlace de datos","Capa de red"],2],
+[T.dial,"En el proceso de modulación PCM, si se desea cuantificar 256 niveles distintos de la señal a convertir, ¿cuántos bits se deberán utilizar para codificar dichas muestras?",["1","9","7","Ninguna opción es correcta","8","2"],4],
+[T.osi,"¿En qué capa de OSI se utiliza OFDM?",["En ninguna","Capa 2","Capa 4","En todas","Capa 1","Capa 3"],4],
+[T.senal,"¿Cuál de los siguientes elementos puede producir un atraso en la corriente que circula por un circuito eléctrico respecto de la tensión aplicada en su entrada?",["Capacitor","Conductor","Inductor","Resistencia","Conector"],2],
+[T.wan,"El componente Network Control Protocol (NCP) de PPP se encarga de:",["Identificar la aplicación.","Asignación dinámica de IP.","Establecer y configurar el enlace.","Cerrar la conexión.","Encapsulación multiprotocolo de capa 3"],[1,4]],
+[T.cable,"¿Cuál es el máximo nivel de modulación que se utiliza en DOCSIS 3.1?",["64 QAM","256 QAM","512 QAM","16384 QAM","4096 QAM","Ninguna es correcta"],4],
+[T.senal,"¿Cuánto nivel de S/N en dB requeriríamos para transmitir sobre la capacidad de un canal telefónico a 64 Kbps (suponer una capacidad del canal telefónico de 3100 Hz)? (indicar solo valores numéricos)",["62,15","61,2","64,1","62","Ninguna es correcta"],0,"C = B·log2(1 + S/N) → S/N = 2^(64000/3100) − 1 ≈ 1,64·10^6 → ≈ 62,15 dB."],
+[T.fibra,"En caso de querer implementar una red de acceso FTTH sobre la red telefónica existente, indique cuáles de las siguientes opciones son correctas:",["Se deberá reemplazar todo el cableado de la red de plantel exterior telefónico","Se deberá instalar alguna unidad conversora óptico / eléctrica en algún armario subrepartidor del plantel exterior","Se deberá llegar con Fibra Óptica hasta las instalaciones del abonado","Se pueden lograr hasta el abonado, tasa de bits de 2 Gb/seg","Está montado sobre una red mixta de fibra óptica y cable multipar de cobre"],[0,2,3]],
+[T.senal,"El ruido que puede afectar la propagación de las ondas electromagnéticas puede ser producido por (una o más):",["Radiación solar (ruido provocado por las explosiones solares)","Arranque y parada de motores eléctricos","Ruido producto del golpeteo de herramientas","Emisiones electromagnéticas provenientes del espacio","Ruidos de automóviles en la calle","Ruido de instrumentos musicales","Humedad del ambiente"],[0,1,3]],
+[T.osi,"Según el Modelo OSI, la comunicación siempre se establece entre capas:",["Ninguna correcta","Verticales y Homólogas","Homólogas del mismo nivel","Homólogas de distinto nivel"],2],
+[T.adsl,"Un usuario realiza una transmisión de datos utilizando la tecnología de acceso a internet ADSL a una velocidad de 0.96 Mbps. La relación S/N del canal es de 37 dB. ¿Cuántos canales DMT utiliza?",["24 canales","25 canales","244 canales","21 canales","Ninguna es correcta"],1],
+[T.osi,"¿Qué capa del modelo OSI se encarga de encapsular direcciones lógicas?",["Física","Enlace","Transporte","Red"],3],
+[T.osi,"¿Cuáles son los protocolos no orientados a la conexión? (una o más)",["IP","UDP","ICMP","TCP"],[0,1,2]],
+[T.lan,"¿Cuál es la función del protocolo IEEE 802.1q?",["Paso de un testigo en anillo","División de dominios de Broadcast","Etiquetado de tramas en enlaces troncales","División de una red en subredes","Árbol de expansión"],2],
+[T.osi,"Entre dos capas homólogas se establece un…",["Protocolo de Comunicación","Protocolo de hardware","Protocolo de software","Establecimiento de comunicación","Enlace de datos","Relación de Comunicación"],0],
+[T.osi,"¿Cuál es la capa que se ocupa de retransmitir las tramas?",["Capa de Enlace de Datos","Capa de Aplicación","Capa de Red","Capa de Transporte"],0],
+[T.adsl,"ADSL utiliza, para la transmisión y recepción de datos, la porción del espectro que va desde:",["160 a 1100 [KHz]","4 a 1100 [KHz]","200 a 1100 [KHz]","26 a 1100 [KHz]"],3],
+[T.cab,"El NEXT es la interferencia electromagnética producida por una señal de radio frecuencia externa, sobre la señal que se emite por un par del cable, medida en el extremo cercano al emisor",VF,1,"Esa definición corresponde a una interferencia externa; el NEXT es diafonía entre pares del mismo cable."],
+[T.wan,"HDLC es un protocolo:",["De red","De transporte","De aplicación","De enlace"],3],
+[T.osi,"Las SDU (Service Data Unit) se encargan de:",["Proporcionar información de control","Intercambiar información entre capas homólogas","Son una forma primitiva de comunicación","Deben ser tratadas por capas del nivel siguiente N+1 de forma transparente."],3,"Una SDU es la unidad de datos que una capa N recibe desde la capa N+1 como parte del servicio que debe brindar."],
+[T.cable,"El enlace entre el CMTS y el módem de usuario en la tecnología de acceso a internet de última milla cable modem es:",["Enlace conmutado compartido","Enlace punto a punto","Enlace conmutado por circuito"],0],
+[T.lan,"¿Cómo se conoce el protocolo de acceso al medio en redes LAN inalámbricas?",["CSMA / CD","Token Ring","ADSL","L2TP","CSMA / CA"],4],
+[T.adsl,"La transmisión a través de celdas ATM forma parte del tipo de transmisión que se utiliza en la milla en la tecnología de acceso a internet ADSL",VF,0],
+[T.lan,"¿Cuál es el dispositivo que permite dividir dominios de colisión?",["Access Point","Amplificador","Extensor Wi-Fi","Hub","Switch"],4],
+[T.lan,"¿Cómo se llaman los puertos de un switch destinados a interconexión con otros switches?",["Troncales","LAN","Repetidores","Duplex","Acceso"],0],
+[T.adsl,"¿Cuál es el ancho de banda de un canal DMT?",["4312.5 Kbps","Ninguna correcta","4312.5 Mbps","4312.4 MHz","4312.5 Hz","4312.5 KHz"],4],
+[T.lan,"¿Cuál es la banda de frecuencia utilizada por las redes inalámbricas?",["400 a 600 MHz","8 GHz","2.4 GHz","10 GHz","6 GHz"],2],
+[T.senal,"Si a la salida de un circuito de comunicaciones se mide que la tensión es 0,01 veces la suministrada en la entrada, se dice que hubo una atenuación en dB de: (indicar sólo valores numéricos, sin signos ni unidades)",["39","-400","-40","321","400","40"],5,"Una atenuación de -40 dB significa una pérdida de 40 dB. Como la pregunta pide el valor de la atenuación (una pérdida) y dice “sin signos”, se reporta 40 (si pusiste -40 también está bien)."],
+[T.cable,"Las funciones del CMTS se encuentran sólo dentro de la capa:",["Capa 1, 2 y 3 del modelo OSI","Capa 1 y 2 del modelo OSI","Capa 1 del modelo OSI","Capa 2 del modelo OSI"],1],
+[T.wan,"Un protocolo de control de red (NCP) tiene la función de: (una o más)",["Encapsulación multiprotocolo de capa 3","Identificar la aplicación","Cerrar la conexión","Establecer y configurar la conexión/enlace","Permitir la asignación de IP dinámica"],[0,4]],
+[T.osi,"¿Qué nivel del modelo OSI subdividen los subniveles LLC y MAC especificados por el IEEE?",["El nivel de enlace","El nivel de transporte","El nivel físico","El nivel de red"],0],
+[T.lan,"La tecnología WiMax, si utiliza IEEE 802.16, opera:",["Con [LOS] y [NLOS]","Solo con enlaces no a vista [NLOS]","Solo con enlaces a la vista [LOS]"],0],
+[T.osi,"¿Cómo está constituida la IDU?",["PDU","ICI y SDU","Ninguna de las correctas","Interface y SAP","SAP y SDU"],1],
+[T.adsl,"La transmisión entre el DSLAM y el BAS es analógica",VF,1],
+[T.wan,"Un protocolo de control de enlace (LPC) tiene la función de:",["Establecer y configurar la conexión/enlace","Identificar la aplicación","Encapsulación multiprotocolo de capa 3","Cerrar la conexión","Permitir la asignación de IP dinámica"],0],
+[T.adsl,"Calcule la máxima capacidad de un canal DMT",["32 kbps","32 Mbps","64.68 Kbps","64.68 Mbps"],2],
+[T.lan,"Indique cuál de los siguientes estándares IEEE no tiene colisión de paquetes",["802.15","802.5","802.11","802.3","802.4"],1],
+[T.senal,"Una señal de comunicaciones, que viene caracterizada por la ecuación s(t) = 10 sen(2 pi 600 t + fase), tiene una longitud de onda (en kilómetros) de: (indicar solo números)",["500","3000","400","50000","Ninguna es correcta"],0,"λ = c / f = 300.000 km/s ÷ 600 Hz = 500 km."],
+[T.osi,"¿En qué capa del modelo OSI se definen las direcciones Físicas o de Hardware?",["Sesión","Aplicación","Enlace de datos","Red","Presentación","Transporte","No existen direcciones físicas","Física"],2,"La capa de enlace de datos se ocupa del direccionamiento físico (MAC), la topología de red, el acceso a la red, la notificación de errores, la entrega ordenada de tramas y el control de flujo."],
+[T.adsl,"Indique cuáles de las siguientes afirmaciones respecto de las distintas tecnologías para implementar la última milla del acceso de abonado son correctas: (una o más)",["Los abonados a ADSL tienen mayor tasa de bits que los abonados a Cable Modem","Es posible construir una red totalmente pasiva de fibra óptica con capacidades de transmisión de Gb/s para llegar hasta la casa del abonado","En una red de CATV la atenuación y el ruido son totalmente compensados y el límite de transmisión de datos es de Terabits/seg","Los abonados a una red celular con tecnología 4G tienen mayor tasa de bits que los abonados a Cable Modem","La tecnología ADSL permite brindar servicios analógicos (voz) y digitales (acceso a Internet)","La tasa de bits que se puede brindar a un abonado está en relación inversa a su distancia de la central local","La tecnología CATV permite brindar servicios analógicos (vídeo) y digitales (acceso a Internet)"],[1,4,5,6]],
+[T.cod,"El CRC utiliza código convolucional",VF,1],
+[T.adsl,"Se denomina última milla al tramo del enlace entre: (una o más)",["El Modem del usuario y el DSLAM","El Modem del usuario y el ISP","Ninguna correcta","El Modem del usuario y el Gabinete de distribución","El Modem del usuario y el BAS"],[0,3]],
+[T.senal,"La ganancia de tensión de un circuito es de 25 dB. Si la salida de tensión es de 5 voltios, ¿cuál es la tensión de entrada? (indicar sólo valores numéricos, sin signos; utilizar la coma como separador de decimales)",["Ninguna es correcta","0,27","0,2812","0,287"],2,"Vin = Vout / 10^(25/20) = 5 / 17,78 ≈ 0,2812 V."],
+[T.adsl,"¿Cuál es el margen de ruido que se fija para los canales DMT para poder aplicar bit swapping?",["Seis bits","4 bits","0.6 dB","6dB","2 dB"],3],
+[T.osi,"En la estructura del modelo OSI, podemos reconocer: (una o más)",["Ninguna es correcta","Dependencia de niveles","Puntos de acceso a cada nivel","Estructura multinivel"],[1,2,3]],
+[T.osi,"¿Cuál de las siguientes afirmaciones es cierta respecto al modelo OSI?",["La capa 3 proporciona transmisiones extremo a extremo","La capa 4 proporciona enrutamiento, direccionamiento y fragmentación de paquetes. Esta capa determina rutas alternativas para evitar congestión de red","La capa 2 proporciona enrutamiento, direccionamiento y fragmentación de paquetes. Esta capa determina rutas alternativas para evitar congestión de red","La capa 5 establece, mantiene y cierra el diálogo entre dos aplicaciones. Controla la organización del diálogo y su sincronización"],3],
+[T.conm,"Para el sistema de comunicaciones conocido como Internet indicar cuáles de las siguientes clasificaciones es correcta:",["Duplex","Grupo cerrado de usuarios (privado)","MAN","LAN","Conmutación de paquetes","Banda ancha","Por difusión","Digital","Banda angosta","Simplex","WAN"],[0,4,5,7,10]],
+[T.dial,"Los estándares ITU para módems telefónicos se conocen como Estándares V",VF,0],
+[T.fibra,"En caso de querer implementar una red de acceso FTTB sobre la red telefónica existente, indique cuáles de las siguientes opciones son correctas:",["Se deberá reemplazar el cableado telefónico de multipares de las redes primarias y secundarias","Está montado sobre una red mixta de fibra óptica y cable multipar de cobre","Se deberá instalar alguna unidad conversora óptico/eléctrica en algún armario subrepartidor del plantel exterior","Se deberá reemplazar todo el cableado de la red de plantel exterior telefónico","Se deberá llegar con Fibra Óptica hasta un conversor óptico/eléctrico ubicado en las instalaciones del edificio del abonado"],[0,1,4]],
+[T.adsl,"En la tecnología de acceso a internet ADSL el ATU-R establece la conexión con el DSLAM cada vez que tiene que establecer una transmisión de datos",VF,1],
+[T.adsl,"El ATU-R dispone de 256 subportadoras para transmitir datos",VF,1],
+[T.seg,"¿Cómo puedo capturar y analizar el tráfico que circula en redes de computadoras?",["Con un analizador de cables","Con un sistema de detección de intrusos (IDS)","Con un cable coaxil","Con un software analizador de paquetes (Sniffer)","Con un firewall"],3],
+[T.osi,"¿Cómo se llama al proceso de movimiento de los datos origen-destino?",["Ninguno correcto","Enrutamiento","Comunicación","Segmentación","Transmisión horizontal","Transmisión vertical"],1],
+[T.osi,"¿A qué nivel OSI corresponden las funciones de encaminamiento?",["El nivel de transporte","El nivel de sesión","El nivel de enlace","El nivel de red"],3],
+[T.fibra,"Una fuente con una potencia de nivel de -20 dBm se conecta a un extremo de un cable de fibra óptica. La longitud de la fibra es 1200 m. El nivel de potencia en el otro extremo se mide como -22,5 dBm. ¿Cuál es la pérdida de la fibra en dB/Km?",["2,4","3000","2,5","5","2,08"],4,"Pérdida total = 2,5 dB en 1,2 km → 2,5 / 1,2 ≈ 2,08 dB/km."],
+[T.lan,"¿Cuál de los siguientes organismos entiende en aspectos de reglamentación de equipos de radiocomunicaciones?",["IEEE","ONU","ISO","Enacom","ANSI/EIA/TIA"],3],
+[T.osi,"¿En qué capa del Modelo OSI se proporciona un acceso al medio?",["Capa de Transporte","Capa de Enlace","Capa de Presentación","Capa Física","Capa de Aplicación"],1],
+[T.dial,"¿Cuál es el espectro de frecuencia que utiliza Dial Up?",["Entre 300 y 3300 KHz","Entre 600 y 3000 KHz","Entre 0 y 3300 KHz"],1,"El ancho de banda efectivo es 2400, así que la diferencia entre el máximo y el mínimo tiene que dar sí o sí 2400."],
+[T.adsl,"¿Cuál de estas aseveraciones es correcta?",["Los canales DMT con portadoras de mayor frecuencia tienen mayor capacidad","Si la longitud de la última milla aumenta, la relación señal/ruido del canal aumenta, y por lo tanto disminuye la velocidad de transmisión","La tecnología ADSL utiliza canales DMT"],2],
+[T.seg,"¿Cuál de los siguientes protocolos permite implementar VPN a nivel de enlace?",["IPv6","IPSec","RIP","Ethernet","L2TP"],4],
+[T.adsl,"Se denomina última milla al tramo del enlace entre:",["El ATU-R y el BAS","El ATU-R y el gabinete de distribución","El ATU-R y el DSLAM","El ATU-C y el ISP","El ATU-C y el DSLAM"],2],
+[T.adsl,"La transmisión entre el DSLAM y el BAS es digital",VF,0],
+[T.osi,"¿Qué se conoce como estándar en comunicaciones?",["Una petición de los usuarios a los proveedores de servicio internet","Un acuerdo entre distintos actores involucrados en el proceso de diseño e implementación de sistemas de comunicaciones que se hace público","Un desarrollo que el fabricante ofrece a los clientes","Una reglamentación de cumplimiento obligatorio"],1],
+[T.adsl,"¿Cuál de estas aseveraciones es correcta para la tecnología de acceso a internet de última milla ADSL?",["El ATU-R no dispone de 32 sub-portadoras para transmitir datos","El ATU-C dispone de 256 sub-portadoras para transmitir datos","El ATU-R dispone de 256 sub-portadoras para transmitir datos"],1],
+[T.lan,"Los campos de la trama 802.3 son:",["Preámbulo, dirección de origen, interface, datos","Preámbulo, SDF, dirección de origen, dirección de destino, longitud o tipo, datos, CRC","Preámbulo, dirección de origen, dirección de destino, datos, CRC"],1],
+[T.seg,"¿Cuál de las siguientes se considera una ventaja en la utilización de la firma digital?",["Protege la integridad de la información","Secreto de la información","Protección frente a accesos no deseados","Protege frente a ataques DoS","Evita la congestión"],0],
+[T.lan,"¿Cuál de las siguientes variantes de los estándares de redes inalámbricas permite la implementación de transmisiones de radio por varios canales de radio simultáneamente?",["IEEE 802.11 b","IEEE 802.11 g","IEEE 802.11 a","IEEE 802.15","IEEE 802.11 n"],4],
+[T.cable,"Se realiza una recepción de datos con un teléfono inteligente utilizando la tecnología de acceso a internet CABLE MODEM a una velocidad de 60 Mbps. La relación S/N del canal es la mejor posible (55 dB). ¿Cuántas portadoras simples utiliza?",["1 portadoras simples","256 portadoras simples","64 portadoras simples","1024 portadoras simples"],0],
+[T.cable,"El CMTS trabaja en el siguiente espectro de frecuencias para su canal descendente:",["[de 86 MHz hasta 606 MHz]","[de 86 MHz hasta 750 MHz]","[de 606 MHz hasta 750 MHz]","[de 750 MHz hasta 862 MHz]"],3],
+[T.dial,"Un modem Dial Up trabaja sobre redes analógicas, por lo tanto, debe modular la señal de banda base utilizando la técnica de modulación analógica",VF,1,"Es FALSA porque utiliza modulación digital (algunos dicen que es verdadera: consultar)."],
+[T.cable,"En la tecnología de acceso a internet “Cable Modem”, ¿cuál es el dispositivo responsable de filtrar el espectro de frecuencia del canal descendente en el modem del usuario?",["Los nodos ópticos","El sintonizador del Modem del Usuario.","El filtro de entrada en el domicilio del usuario.","El CMTS"],1],
+[T.lan,"¿Qué estándar utiliza WiMax que permite enlaces con dispositivos de alta movilidad?",["802.11n","802.2","4G LTE","IEEE802.16d","802.1e","IEEE802.3","IEEE802.11ax","802.16e"],7,"WiMAX se basa en el estándar IEEE 802.16. La versión “e” (802.16e) agregó soporte para movilidad (Mobile WiMAX)."],
+[T.osi,"La transmisión de datos físicamente en el modelo OSI se realiza:",["Verticalmente","Horizontalmente","Depende de lo que se transmita","En forma vertical y en forma horizontal"],0,"Los datos pasan verticalmente entre capas del mismo sistema (de aplicación a presentación, etc.) antes de ser enviados al otro dispositivo."],
+[T.adsl,"¿Cuál de estas aseveraciones es correcta para la tecnología de acceso a internet de última milla ADSL? (una o más)",["El ATU-C dispone de 32 subportadoras para transmitir datos","El ATU-R dispone de 256 subportadoras para transmitir datos","El ATU-R dispone de 32 subportadoras para transmitir datos","La tecnología ADSL utiliza CAP (modulación por amplitud y fase sin portadora)","El ATU-C dispone de 256 subportadoras para transmitir datos"],[2,4],"ATU-R va de 26 KHz a 160 KHz: (160−26)/4,3125 ≈ 31,07 → 32 subportadoras. ATU-C va de 0 KHz a 1104 KHz → 256 subportadoras."],
+[T.adsl,"El DSLAM:",["Se utiliza en Redes Telefónicas Conmutadas","Se utiliza en redes de acceso inalámbrico","Se utiliza en redes HFC."],0],
+[T.lan,"¿En qué puertos de un switch se puede poner seguridad?",["Puertos de acceso","Puertos paralelos","Puertos troncales","Puertos seriales","Puertos RS232"],0],
+[T.cab,"El “Jitter” se produce por:",["El corrimiento de amplitud de los pulsos respecto de su posición original","La variación de fase de la señal digital","La atenuación de los pulsos","La distorsión de los pulsos"],1],
+[T.seg,"¿Cómo se denomina el cifrado en donde un carácter se cambia por otro del mismo alfabeto?",["Por desplazamiento","Por intercambio","Por rotación","Por encriptado","Por sustitución"],4],
+[T.conm,"La conmutación de paquetes puede ser mediante:",["Paquetes y datagramas","Datagramas y circuitos virtuales","Circuitos virtuales y paquetes"],1],
+[T.cab,"¿Cuáles de los siguientes son instrumentos con los cuales se realiza la certificación de un cableado?",["Analizador de espectro","Multímetro digital","OTDR","Certificadores de cableado","Probadores de cable UTP"],3],
+[T.adsl,"El DSLAM dispone de una menor cantidad de ATU-C para atender la demanda de los ATU-R, por lo tanto primero se debe establecer el enlace entre el ATU-R y el ATU-C antes de enviar los datos",VF,1],
+[T.wan,"Las redes ATM están fundamentalmente:",["No orientadas a conexión","Orientadas a conexión","No es necesario el establecimiento previo de la conexión"],1],
+[T.cod,"Los códigos de redundancia cíclica (CRC): (una o más)",["No tienen buena capacidad de detección de errores","Su utilización lleva a incrementar de manera exponencial la cantidad de bits de redundancia","Pueden ser implementados en hardware con configuraciones económicas y simples","Su utilidad es popular solo en redes de baja velocidad","Pueden ser aplicados a mensajes de longitud arbitraria"],[2,4],"Tienen excelente capacidad de detección de errores. Si el sistema deja marcar solo 1 opción, ir con “hardware económico y simple”; si deja marcar más de una, poner las dos."],
+[T.lan,"¿Cuál es el organismo internacional encargado de normalizar protocolos y tecnologías de comunicación inalámbrica (como las comunicaciones celulares móviles) para la transmisión de datos? (escriba sólo las iniciales)",["IEEE","ITU","TDMA","EIA","TIA"],1],
+[T.conm,"¿Cuál de estas características corresponde a una red conmutada por mensajes?",["El mensaje deberá ser almacenado por completo y de forma temporal en el nodo intermedio antes de poder ser reenviado al siguiente","El mensaje se divide en paquetes pequeños que viajan por rutas independientes","Se establece un circuito físico dedicado entre emisor y receptor durante toda la transmisión","El mensaje se transmite bit a bit en tiempo real sin almacenamiento intermedio","Un nodo puede seleccionar de su cola de paquetes en espera de ser transmitidos aquellos que tienen mayor prioridad","La ruta es fija, una vez establecido el circuito no hay pérdidas de tiempo calculando y tomando decisiones de encaminamiento en los nodos intermedios","Los enlaces presentan un retraso en el inicio de la comunicación (se establece el circuito)"],0],
+[T.dial,"Un Módem Dial Up al transmitir datos entre dos usuarios ubicados en países distintos utiliza redes:",["Conmutadas por celdas","Conmutadas por paquetes","Conmutadas por circuitos"],2],
+[T.osi,"¿Cuál de las capas del modelo OSI se encarga de resolver problemas por falta de fiabilidad en circuitos como consecuencia de errores en datos recibidos?",["Enlace","Transporte","Aplicación","Red","Física"],0],
+[T.dial,"¿Cuántos moduladores poseen los modem Dial Up?",["Uno","Uno por cada canal DMT Upstream","Dos","Uno por cada canal DMT Downstream"],0],
+[T.conm,"En los circuitos virtuales:",["Cada estación tiene un solo circuito virtual","Se fija una ruta previa al envío de cada paquete","No es necesario tener una ruta fijada"],1],
+[T.adsl,"Un usuario realiza una transmisión de datos utilizando la tecnología de acceso a internet ADSL. ¿Dentro de qué rango de frecuencia se realiza la transmisión?",["entre [200 y 1104] KHz","entre [160 y 200] KHz","entre [200 y 1104] MHz","entre [26 y 160] KHz","entre [160 y 200] MHz","entre [26 y 160] MHz"],3,"Sería de 200 a 1104 KHz si la consigna dijera “recepción” en vez de “transmisión”: al transmitir se usa el upstream, que va de 26 a 160 KHz."],
+[T.conm,"Indique cuáles de las siguientes características corresponden a la Red Telefónica Pública Conmutada: (una o más)",["Está administrada por el estado nacional a través de la empresa ARSAT","Tiene una estructura jerárquica de centrales locales, de tránsito interurbano e internacionales","Los abonados comparten la conexión de acceso a la central telefónica","El plantel exterior está dividido en Red Primaria, Secundaria y de Acceso de abonado","Es una red con tecnología de conmutación de circuitos"],[1,3,4]],
+[T.adsl,"El enlace entre el ATU-R y ATU-C en la tecnología de acceso a internet de última milla xDSLx es:",["Un enlace punto multipunto.","Un enlace conmutado.","Un enlace compartido","Un enlace punto a punto."],3],
+[T.dial,"¿Cuál es el ancho de banda utilizado en las líneas Dial Up que utilizan el canal telefónico?",["4 KHz","3.2 KHz","2.4 KHz","Ninguna de las anteriores"],2,"El canal telefónico permite hasta 4 KHz, pero de 0 a 600 Hz y de 3000 a 3300 Hz se usan bandas de guarda (inmunidad a retardos, ecos, etc.), por lo que el ancho de banda efectivo es 2.4 KHz."],
+[T.conm,"Características de la conmutación por circuitos: (una o más)",["La transmisión se realiza en tiempo real, por lo cual es adecuado para comunicación de voz y video","Una vez establecida la ruta de comunicación, el circuito cambia, por lo que es posible reajustar la ruta de comunicación","La transmisión no se realiza en tiempo real, por lo cual no es adecuado para comunicación de voz y video","La ruta es fija, una vez establecido el circuito no hay pérdidas de tiempo calculando y tomando decisiones de encaminamiento en los nodos","Los enlaces que utilizan conmutación por circuitos presentan retraso en el inicio de la comunicación (se establece el circuito)"],[0,3,4],"Algunos redactan “El circuito es fijo, no hay pérdidas de tiempo calculando…”, que es lo mismo que “La ruta es fija…”."],
+[T.adsl,"La tecnología ADSL utiliza CAP (modulación por amplitud y fase sin portadora)",VF,1],
+[T.cable,"En la tecnología Cable Modem los canales de datos se filtran a través de:",["Filtro pasa bajo","Filtro pasa alto","Ninguna respuesta es correcta","Filtro elimina banda"],1,"Los datos se transmiten a mayores frecuencias y se usa un filtro pasa alto para no tomar las frecuencias de la TV (ver espectro de cable modem)."],
+[T.osi,"¿Cuál es la capa del modelo OSI que proporciona control del flujo?",["El control de acceso al medio","Física","De transporte","De aplicación","De red"],2],
+[T.lan,"¿Cuál es el estándar propuesto por la IEEE para las redes inalámbricas?",["IEEE 802.11","IEEE 802.2","IEEE 802.3","IEEE 802.5Q","IEEE 802.4"],0],
+[T.lan,"¿En qué capas del Modelo OSI operan las redes LAN?",["Capas Física y de Red","Capas de Red y de Transporte","Capas Presentación y Aplicación","Capas Sesión y de Enlace de Datos","Capas Física y de Enlace de Datos","Capas de Red y de Enlace de Datos"],4],
+[T.senal,"La atenuación de una señal es:",["Una pérdida de sincronismo en la señal recibida","El aumento del ancho de banda de la señal transmitida","Una pérdida de fidelidad de la señal transmitida","Una pérdida de potencia de las señales transmitidas"],3],
+[T.lan,"¿Cuál es el organismo encargado de desarrollar protocolos de acceso al medio en redes LAN?",["IEEE","EIA","TIA","LAN"],0],
+[T.osi,"¿En qué capa del Modelo OSI se deben establecer los niveles de modulación de una señal?",["Capas Sesión y de Enlace de Datos","Ninguna correcta","Capas Presentación y Aplicación","Capas Física y de Enlace","Capas Física y de Red","Capas de Red y de Transporte"],1,"La modulación es función exclusiva de la capa física (nivel 1); ninguna otra capa participa, por eso las opciones que incluyen dos capas no son correctas."],
+[T.osi,"Los protocolos que no se ajustan al esquema de niveles OSI son:",["Protocolos no orientados a la conexión.","Protocolos orientados al bit.","Protocolos estructurados.","Protocolos no estructurados.","Protocolos orientados al carácter","Protocolos orientados a la conexión"],3],
+[T.osi,"¿Quién creó el modelo OSI? (escriba solo las siglas)",["ISO","Ninguna es correcta","IEEE","ITU"],0],
+[T.conm,"¿Cuál de estas características corresponde a una red conmutada por paquetes?",["Cada nodo, una vez establecido el circuito, la ruta y pérdidas de tiempo calculando y tomando decisiones de encaminamiento en los nodos intermedios.","Un nodo puede seleccionar de su cola de paquetes en espera de ser transmitidos aquellos que tienen mayor prioridad.","El mensaje deberá ser almacenado por completo y de forma temporal en el nodo intermedio antes de poder ser reenviado al siguiente.","Los enlaces presentan un retraso en el inicio de la comunicación (se establece el circuito)."],1],
+[T.cab,"¿Cómo se calcula el ACR (Attenuation-to-Crosstalk Ratio) expresado en dB?",["ACR (dB) = NEXT (dB) - Atenuación (dB) - 10 dB","ACR (dB) = NEXT (dB) - Atenuación (dB)","ACR (dB) = NEXT (dB) + Atenuación (dB) / 2","ACR (dB) = Atenuación (dB) + Diafonía (NEXT)"],1],
+[T.conm,"Una topología en estrella es la que:",["Por tener redundancia de enlaces, posibilita caminos alternativos para la transmisión de datos y en consecuencia aumenta la confiabilidad de la red.","Se organiza de forma tal que cada estación o nodo está conectado sólo a otros dos.","Es una topología centralizada.","Los nodos están conectados cada uno con todos los demás."],2],
+[T.osi,"¿Cuál de las siguientes es una función del nivel de enlace de datos del modelo OSI?",["Convertir señales eléctricas en bits","Proporcionar encaminamiento entre redes heterogéneas","Proporcionar mecanismos de control de acceso a medios compartidos de red","Controlar las comunicaciones extremo a extremo de dos hosts ubicados en redes diferentes","Controlar congestión en nodos"],2],
+[T.dial,"Indique cuáles de las siguientes afirmaciones son verdaderas: 1) Tecnología que permite transmitir datos digitales sobre el bucle analógico del lazo de abonado telefónico: [ESPACIO 1]. 2) El modem telefónico utilizado para implementar accesos telefónicos sobre el bucle analógico de abonado telefónico: [ESPACIO 2]",["IEEE | es un modem telefónico","Ninguna es correcta","DIAL-UP | es un ECD","ISP | es un switch"],2],
+[T.lan,"¿Cuál es el estándar propuesto por la IEEE para las redes inalámbricas que operan en 2.4 GHz?",["IEEE 802.11ac","IEEE 802.11","IEEE 802.11a","IEEE 802.11b"],3],
+[T.adsl,"El DSLAM: (una o más)",["Utiliza FDM para acceder a los ATU-R","Utiliza FDM para administrar los canales DMT","Utiliza OFDM para acceder a los ATU-R","Utiliza TDMA para acceder a los ATU-C"],[2,3]],
+[T.adsl,"En la tecnología de acceso a internet ADSL (haciendo un cálculo estricto respecto del ancho de banda utilizado en Argentina), ¿cuántos demoduladores son necesarios para recibir la información proveniente del canal Downstream en el ATU-R?",["Ninguna es correcta","210","256","30","32"],1],
+[T.conm,"Características de la conmutación por circuitos:",["Una vez establecida la ruta de comunicación, el circuito cambia por lo que es posible reajustar la ruta de comunicación.","El circuito no es fijo por lo tanto hay pérdidas de tiempo calculando y tomando decisiones de encaminamiento en los nodos intermedios.","La comunicación dispone en exclusiva del circuito establecido mientras dura la sesión.","Los enlaces que utilizan conmutación por circuito no presentan un retraso en el inicio de la comunicación (el circuito ya está establecido).","La transmisión no se realiza en tiempo real, por lo cual no es adecuado para comunicación de voz y video"],2],
+[T.lan,"En el campo de datos de la trama 802.3, ¿por qué se requiere una longitud mínima?",["Para el correcto funcionamiento del CRC","Para el correcto funcionamiento de CSMA/CD","No requiere longitud mínima","Solo requiere longitud máxima"],1],
+[T.cod,"La distancia de Hamming sirve para:",["Medir la distancia de un código de canal con respecto a otro","Medir la distancia de un código de línea con respecto a otro","Medir la fortaleza de un código de canal con respecto a otro","Medir la capacidad de error de un código de canal con respecto a otro","Medir de un código de línea con respecto a otro","Medir la capacidad de error de un código de línea con respecto a otro"],2],
+[T.lan,"¿Cuál es el protocolo que permite la comunicación a través de una topología de switch sin bucles para eliminar las tormentas de broadcast?",["IEEE 802.1Q","IEEE 802.2","IEEE 802.3","IEEE 802.1D","ASI/EIA/TIA 568"],3],
+[T.conm,"Si un mensaje que debe ser enviado se puede dividir en unidades más pequeñas DE TAMAÑO FIJO y ellas pueden viajar por distintos caminos hasta llegar al receptor, se dice que la red utiliza:",["Conmutación de celdas","Conmutación de paquetes en modo datagrama","Multidifusión","Conmutación de paquetes en modo circuito virtual","Conmutación de circuitos"],0],
+[T.conm,"Internet es una red: (una o más)",["LAN","De difusión","Con protocolos estandarizados por IEEE","Conmutada por circuitos","WAN","Tolerante a fallas","Conmutación de paquetes","Simplex"],[4,5,6]],
+[T.senal,"¿Cuál sería el ancho de banda mínimo en Hz que debería tener un canal de comunicaciones para conducir una señal constituida por un tren de 1000 pulsos rectangulares de 0,0002 ms de duración cada uno? (considerar el criterio del primer cruce por cero; indicar solo números)",["2500000","25000","250000","Ninguna es correcta","25000000"],0],
+[T.conm,"Una topología en anillo es la que:",["Se organiza de forma tal que cada estación o nodo está conectado solo a otros dos.","Los nodos están conectados cada uno con todos los demás","Es una topología centralizada.","Por tener redundancia de enlaces, posibilita caminos alternativos para la transmisión de datos y en consecuencia aumenta la confiabilidad de la red."],0],
+[T.adsl,"¿Cuál de estas aseveraciones es correcta?",["El Splitter en el domicilio del abonado permite distinguir entre las señales Upstream y Downstream","El ATU-R se comunica directamente con el DSLAM en la tecnología de acceso Dial UP","En ADSL las características de la última milla de cada usuario definen la velocidad de transmisión que puede brindar el sistema de transmisión"],2],
+[T.cable,"Para el sistema de comunicaciones de difusión de TV por cable (CATV), indicar cuáles de las clasificaciones es correcta:",["Banda angosta","Banda ancha","WAN","MAN","LAN","Duplex","Simplex","Grupo cerrado de usuarios (privado)"],[1,3,6]],
+[T.cable,"¿Dentro de qué rango de frecuencia se realiza la recepción?",["750 - 862 MHz para recepción","750 - 872 MHz para recepción","630 - 722 MHz para recepción","867 - 980 MHz para recepción"],0],
+[T.osi,"¿Cuál de las capas se ocupa de proporcionar mecanismos de control de acceso a medios compartidos de red?",["Capa de enlace","Capa de red","Capa física","Capa de transporte","Capa de aplicación"],0],
+[T.osi,"¿Qué capa del modelo OSI es la encargada del enrutamiento entre redes distintas?",["De aplicación","De transporte","De red","Física","De enlace"],2],
+[T.wan,"El protocolo X25 es un estándar UIT para:",["Cualquier red","Redes de área local","Redes de área amplia"],2],
+[T.osi,"¿En qué nivel OSI actúan los repetidores?",["Red","Enlace","Físico","Transporte"],2],
+[T.adsl,"¿Cuáles son los parámetros que definen la velocidad de transmisión de los canales descendentes en las distintas tecnologías de acceso a internet de última milla? (una o más)",["Niveles de modulación de la señal transmitida","Relación señal ruido del canal","Distribución espectral de potencia de la señal recibida","Ancho de banda del canal"],[0,1,3]],
+[T.dial,"En el acceso a internet conocido como [ESPACIO 1] el terminal de datos (PC) se conecta a un [ESPACIO 2] y mediante el bucle de abonado de la red telefónica pública conmutada, le envía su señal a un [ESPACIO 3] ubicado en la central telefónica y de ahí la comunicación continúa su camino al [ESPACIO 4]",["Dial-up | ECD | Servidor de Acceso Remoto (RAS) | ISP","RAS | PC | router | central telefónica","PC | ECD | Switch Ethernet | ISP"],0],
+[T.adsl,"¿Cuántos moduladores poseen los modem ADSL?",["Uno","Uno por cada canal DMT Upstream","Uno por cada canal DMT Downstream","Dos"],1,"Ojo: el feedback del banco dice que el módem ADSL tiene dos moduladores (subida y bajada), pero la respuesta marcada como correcta es “Uno por cada canal DMT Upstream”. Verificá con tus apuntes."],
+[T.osi,"Dentro de la capa OSI, la función de cifrado de datos se realiza en el nivel de:",["Transporte","Presentación","Red","Sesión"],1],
+[T.osi,"¿Cuáles son los protocolos orientados a la conexión?",["TCP","IP","UDP","ICMP"],0],
+[T.lan,"¿Cuál de los siguientes organismos entiende en aspecto de normalización de protocolos de acceso a redes LAN?",["IETF","ONU","IEEE","ANSI/EIA/TIA","ISO"],2],
+[T.lan,"¿Cuál de los siguientes es un protocolo de acceso al medio en redes tipo LAN?",["Frame relay","PPP","IEEE 802.15","IEEE 802.16","IEEE 802.3"],4],
+[T.dial,"¿Qué servicios de comunicaciones se pueden brindar sobre la red telefónica pública conmutada con el cableado tradicional de cobre? (una o más)",["Servicios de telefonía, acceso a internet y difusión de TV (TRIPLE PLAY)","Servicio de acceso a internet de banda angosta (dial-up)","Servicio de acceso a internet de banda ancha (VDSL)","Servicio de voz (telefónico)","Servicio de transmisión de datos (vía modems)"],[1,3,4]],
+[T.adsl,"¿Cuál de estas afirmaciones es correcta?",["La función del DSLAM es demultiplexar la transmisión de datos hacia la red de transporte (típicamente una red ATM)","La función del DSLAM es multiplexar la transmisión de datos hacia la red de última milla","La función del DSLAM es demultiplexar la transmisión de datos hacia la red de última milla"],0,"Algunos dicen que la correcta es la C: consultar."],
+[T.lan,"¿A qué tasa de bits funciona una red tipo Fast Ethernet?",["1 Mbps","1000 Mbps","10 Mbps","10 MBps","100 Mbps"],4],
+[T.dial,"¿En qué capas del Modelo OSI opera un Modem Dial Up?",["Capas Física","Ninguna correcta","Capas Física y de Enlace de Datos","Capas de Red y de Enlace de Datos","Capas Física y de Red"],2,"El módem convierte señales digitales ↔ analógicas (capa física) y también maneja ciertos aspectos del enlace de datos (control de errores, sincronización)."],
+[T.dial,"¿A qué velocidad muestrean las compañías telefónicas?",["8000 [muestras/segundo]","4800 [baudios]","8000 [baudios]","6000 [bits/segundo]","6000 [muestras/segundo]"],0],
+[T.conm,"¿Cuáles de las siguientes opciones son ejemplo de conmutación asíncrona? (una o más)",["Herramientas de administración de tareas","Aplicaciones de mensajería","Chat","Correo electrónico"],[0,1,3]],
+[T.conm,"En una red de conmutación de paquetes se establecen las siguientes fases:",["Fase de establecimiento","Fase de establecimiento y fase de liberación","Fase de establecimiento, fase de transferencia y fase de liberación","No tiene fase de establecimiento ni fase de liberación"],2,"En los circuitos virtuales dentro de la conmutación de paquetes (por ejemplo X.25 o Frame Relay) se establecen esas tres fases: establecimiento del circuito virtual, transferencia de datos y liberación del circuito."],
+[T.senal,"Se tiene una señal de comunicaciones cuyo comportamiento puede ser caracterizado por la ecuación s(t) = 5 * sen(2 * pi * 1000 * t + fase). Si debo transmitir dicha señal por un medio conductor para que pasen sin atenuación al menos el componente fundamental y las armónicas hasta la de 7° orden, entonces el medio conductor se deberá comportar como un:",["Filtro paso bajos de Bw = 7000 Hz","Filtro paso bajos de Bw = 3500 Hz","Filtro paso banda de 3000 a 5000 Hz","Filtro pasa altos de Bw = 3500 Hz","Filtro pasa altos de Bw >> 7000 Hz"],0],
+[T.wan,"Una celda ATM consta de:",["Una cabecera de 5 bytes y una carga útil de 48 bytes","Una cabecera de 5 bytes y una carga útil de 53 bytes","Una cabecera de 10 bytes y una carga útil de 53 bytes"],0],
+[T.adsl,"En las tecnologías de acceso a internet xDSLx (que no utilizan FTTH, ni modifican la posición del DSLAM) el incremento de velocidad se logra solamente aumentando el ancho de banda del canal de transmisión",VF,1],
+[T.osi,"Los protocolos que, para poder transmitir datos, deben primero definir un canal físico o lógico entre Fuente y Destino son:",["Protocolos orientados al bit","Protocolos no orientados a la conexión","Protocolos no estructurados","Protocolos orientados a la conexión","Protocolos orientados al carácter","Protocolos estructurados"],3],
+[T.senal,"Si en un circuito electrónico encontramos un elemento cuya ecuación es R + jwL, decimos que la corriente adelanta respecto de la tensión aplicada",VF,1],
+[T.lan,"En el protocolo CSMA/CD: (una o más)",["Si una estación necesita transmitir, lo hace y luego escucha para verificar si hubo colisiones o no durante su transmisión","Si una estación necesita transmitir, debe avisar que lo va a hacer para que ninguna otra lo pueda usar","Si una estación necesita transmitir, debe escuchar si el canal está libre","Si una estación necesita transmitir, y al escuchar el canal detecta que ya está ocupado, entonces refuerza la ocupación del canal, transmitiendo un mensaje de error","Mientras una estación está transmitiendo, escucha el canal para verificar que no haya colisión con otras transmisiones simultáneas","Si una estación necesita transmitir, y al escuchar el canal detecta que ya está ocupado, entonces espera hasta que esté libre para poder transmitir ella"],[2,4,5],"La primera opción es parcialmente incorrecta: en CSMA/CD la detección de colisión se hace durante la transmisión, no después."],
+[T.cab,"La certificación FEXT de un cable consiste en:",["Medir el tiempo de propagación de la señal","Medir la diferencia de retardo entre los pares de cables de transmisión","Medir la interferencia producida por la paradiafonía, en el extremo más cercano donde se inyecta la señal","Medir la interferencia producida por la paradiafonía en el extremo más lejano donde se inyecta la señal","Medir el tiempo de propagación de la señal en el extremo más cercano donde se inyecta la señal","Medir la pérdida de la potencia de la señal en un rango de frecuencias","Medir el tiempo de propagación de la señal en el extremo más lejano donde se inyecta la señal"],3],
+[T.adsl,"En la tecnología VDSL2 los canales de datos se filtran en la línea de acceso con:",["No se filtra","Filtro pasa alto","Filtro pasa bajo","Filtro pasa banda"],1],
+[T.senal,"Si en un circuito de comunicaciones se dice que la potencia de entrada es de 0 dBm, ¿cuál es la potencia de salida en Watt si la ganancia es de 30 dB? (indicar solo valores numéricos, sin signos ni unidades)",["5","4","2","1","3"],3,"0 dBm = 1 mW; +30 dB equivale a multiplicar por 1000 → 1000 mW = 1 W."],
+[T.cable,"Calcule la máxima capacidad de un canal descendente (SC-QAM) para DOCSIS 3.0, en Argentina",["64 Kbps","64 Mbps","32 Kbps","32 Mbps"],1],
+[T.cab,"El diagrama de ojo de una señal con EMI se cierra en forma:",["Horizontal","Horizontal y Vertical","Vertical","No tiene variación"],2,"La interferencia electromagnética hace que el ojo se cierre verticalmente."],
+[T.seg,"¿Cuál de los siguientes algoritmos de encriptado trabaja con distintas claves (de encriptado y desencriptado)?",["Ethernet","DES","IDEA","RSA","3DES"],3],
+[T.senal,"La señal modulada en FM es más inmune a ruidos impulsivos que la señal modulada en AM",VF,0],
+[T.osi,"En el modelo de referencia para la interconexión de sistemas abiertos (OSI), indicar cuál de los siguientes niveles no soporta la función o servicio de corrección de errores:",["Aplicación","Red","Físico","Enlace"],2],
+[T.senal,"Si quisiera sintonizar la emisora de FM de la UTN, necesitaría:",["Un filtro paso altos con frecuencia de corte en 94.3 MHz","Un filtro paso bajos de Bw = 94.3 MHz","Un filtro paso banda de Bw = 200 KHz, sintonizado en 94.3 Hz","Un filtro paso banda variable de Bw = 3400 Hz, sintonizado en 94.3 KHz","Un filtro paso banda variable de Bw = 200 KHz, sintonizado en 94.3 MHz"],4],
+[T.adsl,"En la tecnología de acceso a internet xDSLx se logra el incremento de velocidad hasta 100 Mbps solamente con la implementación FTTH",VF,1,"Es falsa: el incremento de velocidad hasta 100 Mbps o más se logra con VDSL2 sobre el cableado de cobre existente, que no requiere FTTH."],
+[T.seg,"¿Cómo logro proteger la información frente a escuchas indeseadas?",["Atenuándola","Autenticándola","Firmándola digitalmente","Digitalizándola","Encriptando la información"],4],
+[T.lan,"Indique cuáles de los siguientes dispositivos se considera que cumplen las funciones de la capa de RED",["Firewall","Switch","Access Point","Router","Modem telefónico","Placa de Interfaz de red (NIC)","Hub"],3],
+[T.adsl,"ADSL utiliza la porción del espectro que va desde:",["160 a 1100 [KHz]","4 a 1100 [KHz]","200 a 1100 [KHz]","26 a 1104 [KHz]"],3]
+];
+/*BANK_END*/
+
+/* ================= utilidades ================= */
+var LS={
+  get:function(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
+  set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},
+  del:function(k){try{localStorage.removeItem(k)}catch(e){}}
+};
+function hash(s){var h=5381;for(var i=0;i<s.length;i++){h=((h<<5)+h+s.charCodeAt(i))|0}return 'q'+(h>>>0).toString(36)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function sameSet(a,b){if(a.length!==b.length)return false;for(var i=0;i<a.length;i++){if(b.indexOf(a[i])<0)return false}return true}
+
+/* Normaliza una pregunta (objeto) y la valida. Devuelve null si es inválida. */
+function norm(o){
+  if(!o||typeof o.pregunta!=='string'||!o.pregunta.trim())return null;
+  var op=o.opciones;
+  if(!Array.isArray(op)||op.length<2)return null;
+  for(var i=0;i<op.length;i++){if(typeof op[i]!=='string')return null}
+  var multi=Array.isArray(o.correcta);
+  var c=multi?o.correcta.slice():[o.correcta];
+  if(!c.length)return null;
+  for(var k=0;k<c.length;k++){if(typeof c[k]!=='number'||c[k]<0||c[k]>=op.length||Math.floor(c[k])!==c[k])return null}
+  return {
+    id:hash(o.pregunta+'|'+op.join('|')),
+    tema:(typeof o.tema==='string'&&o.tema.trim())?o.tema.trim():'General',
+    pregunta:o.pregunta,opciones:op,correcta:c,multi:multi,
+    imagen:(typeof o.imagen==='string'&&o.imagen)?o.imagen:'',
+    nota:(typeof o.nota==='string'&&o.nota)?o.nota:''
+  };
+}
+
+function buildBank(){
+  var list=[],seen={};
+  BASE.forEach(function(r){
+    var q=norm({tema:r[0],pregunta:r[1],opciones:r[2],correcta:r[3],nota:r[4]});
+    if(q&&!seen[q.id]){seen[q.id]=1;list.push(q)}
+  });
+  LS.get('qz_extra',[]).forEach(function(o){
+    var q=norm(o);
+    if(q&&!seen[q.id]){seen[q.id]=1;list.push(q)}
+  });
+  return list;
+}
+
+/* ================= estado ================= */
+var app=document.getElementById('app');
+var S={bank:[],byId:{},screen:'home',cfg:{n:10,tema:'*',mix:false},sess:null,pend:[]};
+
+function indexBank(){S.byId={};S.bank.forEach(function(q){S.byId[q.id]=q})}
+function saveCfg(){LS.set('qz_cfg',S.cfg)}
+function saveSess(){if(S.sess)LS.set('qz_sesion',S.sess);else LS.del('qz_sesion')}
+function errIds(){return LS.get('qz_errores',[]).filter(function(id){return !!S.byId[id]})}
+function setErr(id,ok){
+  var e=LS.get('qz_errores',[]);var p=e.indexOf(id);
+  if(ok){if(p>-1)e.splice(p,1)}else{if(p<0)e.push(id)}
+  LS.set('qz_errores',e);
+}
+function cur(){return S.byId[S.sess.ids[S.sess.idx]]}
+function temas(){
+  var m={};S.bank.forEach(function(q){m[q.tema]=(m[q.tema]||0)+1});
+  return Object.keys(m).sort(function(a,b){return a.localeCompare(b,'es')}).map(function(t){return {t:t,c:m[t]}});
+}
+function pool(){return S.bank.filter(function(q){return S.cfg.tema==='*'||q.tema===S.cfg.tema})}
+function canShuffle(q){return !q.opciones.some(function(o){return /ninguna|todas|todos|verdadero|falso|ambas/i.test(o)})}
+
+function startQuiz(ids,mode,label){
+  var ord={};
+  ids.forEach(function(id){
+    var q=S.byId[id],idx=q.opciones.map(function(_,i){return i});
+    ord[id]=(S.cfg.mix&&canShuffle(q))?shuffle(idx):idx;
+  });
+  S.sess={ids:ids,idx:0,ans:{},ord:ord,mode:mode,label:label,done:false};
+  S.pend=[];S.screen='quiz';saveSess();render();
+}
+
+/* ================= vistas ================= */
+function vHome(){
+  var errN=errIds().length,p=pool(),n=S.cfg.n,will=(n===0||n>p.length)?p.length:n;
+  var h='<h1>Preguntero<br><span>Comunicaciones · UTN FRC · Ing. en Sistemas</span></h1>';
+  if(S.sess&&!S.sess.done){
+    h+='<div class="card"><span class="lbl">Cuestionario en curso</span><p>Vas por la pregunta '+(S.sess.idx+1)+' de '+S.sess.ids.length+(S.sess.mode==='repaso'?' (repaso de errores)':'')+'.</p>'+
+       '<button class="btn" data-act="resume">Continuar</button><div class="sp"></div><button class="btn sec" data-act="discard">Descartar</button></div>';
+  }
+  h+='<div class="card"><span class="lbl">Cantidad de preguntas</span><div class="chips">'+
+     [5,10,25,50,100,0].map(function(v){return '<button class="chip'+(n===v?' on':'')+'" data-act="n" data-v="'+v+'">'+(v===0?'Todas':v)+'</button>'}).join('')+'</div>'+
+     '<div class="sp"></div><span class="lbl" style="margin-top:12px">Tema</span>'+
+     '<select id="tema"><option value="*"'+(S.cfg.tema==='*'?' selected':'')+'>🎲 Aleatorio (todos los temas)</option>'+
+     temas().map(function(x){return '<option value="'+esc(x.t)+'"'+(S.cfg.tema===x.t?' selected':'')+'>'+esc(x.t)+' ('+x.c+')</option>'}).join('')+'</select>'+
+     '<label class="tog"><input type="checkbox" id="mix"'+(S.cfg.mix?' checked':'')+'> Mezclar el orden de las opciones</label>'+
+     '<p class="mu" style="margin:10px 0 14px">Vas a responder '+will+' pregunta'+(will===1?'':'s')+'.</p>'+
+     '<button class="btn" data-act="start">Comenzar</button></div>';
+  h+='<div class="card"><span class="lbl">Mis errores</span><p class="mu">'+(errN?'Tenés '+errN+' pregunta'+(errN===1?'':'s')+' errada'+(errN===1?'':'s')+' guardada'+(errN===1?'':'s')+'. Si las acertás en un repaso, salen del banco.':'Todavía no tenés errores guardados.')+'</p>'+
+     '<button class="btn sec" data-act="startErr"'+(errN?'':' disabled')+'>Repasar mis errores ('+errN+')</button>'+
+     (errN?'<div class="sp"></div><button class="btn sec" data-act="clearErr">Borrar errores guardados</button>':'')+'</div>';
+  h+='<div class="card"><span class="lbl">Banco de preguntas</span><p class="mu">'+S.bank.length+' preguntas cargadas.</p><button class="btn sec" data-act="add">Agregar preguntas (JSON)</button></div>';
+  return h;
+}
+
+function vQuiz(){
+  var s=S.sess,q=cur(),a=s.ans[q.id],tot=s.ids.length,okc=0,bad=0,done=0;
+  s.ids.forEach(function(id){var r=s.ans[id];if(r){done++;if(r.ok)okc++;else bad++}});
+  var h='<div class="top"><button class="back" data-act="exit">‹ Salir</button><div class="score">'+(s.idx+1)+' / '+tot+' &nbsp; ✔ <b>'+okc+'</b> &nbsp; ✘ <b>'+bad+'</b></div></div>'+
+        '<div class="bar"><i style="width:'+Math.round(done*100/tot)+'%"></i></div>'+
+        '<span class="tag">'+esc(q.tema)+(s.mode==='repaso'?' · repaso':'')+'</span>';
+  if(q.imagen)h+='<img class="qimg" src="'+esc(q.imagen)+'" alt="Imagen de la pregunta" onerror="this.style.display=\'none\'">';
+  h+='<p class="q">'+esc(q.pregunta)+'</p>';
+  if(q.multi&&!a)h+='<p class="hint">Hay más de una respuesta correcta: marcá todas y tocá “Confirmar”.</p>';
+  s.ord[q.id].forEach(function(oi,pos){
+    var cls='opt'+(q.multi?' multi':''),k=String.fromCharCode(65+pos),extra='';
+    if(a){
+      cls+=' locked';
+      var isC=q.correcta.indexOf(oi)>-1,isS=a.sel.indexOf(oi)>-1;
+      if(isC&&isS){cls+=' ok';k='✓'}
+      else if(isS){cls+=' bad';k='✗'}
+      else if(isC){cls+=q.multi?' miss':' ok';k='✓';if(q.multi)extra=' <small>(faltó marcar)</small>'}
+    }else if(S.pend.indexOf(oi)>-1){cls+=' sel';if(q.multi)k='✓'}
+    h+='<button class="'+cls+'" data-act="opt" data-i="'+oi+'"><span class="k">'+k+'</span><span class="t">'+esc(q.opciones[oi])+extra+'</span></button>';
+  });
+  if(a){
+    var ct=q.correcta.map(function(i){return esc(q.opciones[i])}).join(' · ');
+    h+='<div id="fb" class="fb '+(a.ok?'ok':'bad')+'"><b>'+(a.ok?'✔ ¡Correcto!':'✘ Incorrecto')+'</b>'+
+       (a.ok?'':'<div style="margin-top:6px">Respuesta correcta: '+ct+'</div>')+
+       (q.nota?'<div class="nota">'+esc(q.nota)+'</div>':'')+'</div>';
+  }
+  h+='<div class="foot">';
+  if(a)h+='<button class="btn" data-act="next">'+(s.idx>=tot-1?'Ver resultados':'Siguiente ›')+'</button>';
+  else if(q.multi)h+='<button class="btn" data-act="confirm"'+(S.pend.length?'':' disabled')+'>Confirmar</button>';
+  h+='</div>';
+  return h;
+}
+
+function wrongOf(s){return s.ids.filter(function(id){return s.ans[id]&&!s.ans[id].ok})}
+
+function vResult(){
+  var s=S.sess,tot=s.ids.length,wr=wrongOf(s),okc=tot-wr.length,pct=tot?Math.round(okc*100/tot):0;
+  var h='<h2>Resultado'+(s.mode==='repaso'?' del repaso':'')+'</h2>'+
+        '<div class="card"><div class="big">'+pct+'%</div><p class="mu" style="text-align:center">'+okc+' de '+tot+' correctas · '+wr.length+' incorrecta'+(wr.length===1?'':'s')+'</p>';
+  if(wr.length)h+='<button class="btn" data-act="again">🔁 Repasar solo los errores ('+wr.length+')</button><div class="sp"></div>';
+  else h+='<p style="text-align:center;font-weight:700">¡Sin errores! 🎉</p>';
+  h+='<button class="btn sec" data-act="newq">Nuevo cuestionario</button></div>';
+  if(wr.length){
+    h+='<div class="card"><span class="lbl">Preguntas erradas</span>';
+    wr.forEach(function(id){
+      var q=S.byId[id],a=s.ans[id];
+      h+='<div class="wrong"><div>'+esc(q.pregunta)+'</div>'+
+         '<div class="a">Tu respuesta: '+a.sel.map(function(i){return esc(q.opciones[i])}).join(' · ')+'</div>'+
+         '<div class="c">Correcta: '+q.correcta.map(function(i){return esc(q.opciones[i])}).join(' · ')+'</div></div>';
+    });
+    h+='</div>';
+  }
+  return h;
+}
+
+var EJEMPLO='[\n  {\n    "tema": "ADSL",\n    "pregunta": "¿Cuál es el ancho de banda de un canal DMT?",\n    "opciones": ["4312,5 Hz", "4312,5 kHz", "4,3125 MHz"],\n    "correcta": 0,\n    "imagen": "figuras/dmt.png",\n    "nota": "Explicación opcional"\n  },\n  {\n    "tema": "Cable Modem",\n    "pregunta": "Marcá las correctas (varias)",\n    "opciones": ["A", "B", "C", "D"],\n    "correcta": [0, 2]\n  }\n]';
+function vAdd(){
+  var n=LS.get('qz_extra',[]).length;
+  return '<div class="top"><button class="back" data-act="back">‹ Volver</button></div><h2>Agregar preguntas</h2>'+
+    '<div class="card"><p>Pegá un arreglo JSON con tus preguntas. Cada una necesita <b>pregunta</b>, <b>opciones</b> y <b>correcta</b> (número desde 0 para una sola respuesta, o lista <b>[0,2]</b> para varias). Son opcionales <b>tema</b>, <b>imagen</b> (URL, data URI o ruta junto al index.html) y <b>nota</b>.</p>'+
+    '<pre>'+esc(EJEMPLO)+'</pre>'+
+    '<textarea id="json" placeholder="Pegá acá tu JSON…" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea>'+
+    '<div id="msg"></div>'+
+    '<button class="btn" data-act="saveAdd">Guardar preguntas</button>'+
+    (n?'<div class="sp"></div><button class="btn sec" data-act="delAdd">Borrar las '+n+' preguntas que agregué</button>':'')+'</div>';
+}
+
+function render(keep){
+  var h='';
+  if(S.screen==='home')h=vHome();
+  else if(S.screen==='quiz')h=vQuiz();
+  else if(S.screen==='result')h=vResult();
+  else if(S.screen==='add')h=vAdd();
+  var y=window.pageYOffset||0;
+  app.innerHTML=h;
+  if(keep){window.scrollTo(0,y)}else{window.scrollTo(0,0)}
+}
+function showMsg(t,err){var m=document.getElementById('msg');if(m){m.className='msg '+(err?'err':'ok');m.textContent=t}}
+
+/* ================= lógica ================= */
+function answer(sel){
+  var q=cur(),ok=sameSet(sel,q.correcta);
+  S.sess.ans[q.id]={sel:sel,ok:ok};
+  setErr(q.id,ok);saveSess();S.pend=[];
+  render(true);
+  var f=document.getElementById('fb');
+  if(f&&f.scrollIntoView){try{f.scrollIntoView({block:'nearest',behavior:'smooth'})}catch(e){}}
+}
+function next(){
+  var s=S.sess;
+  if(s.idx>=s.ids.length-1){s.done=true;S.screen='result'}else{s.idx++;S.pend=[]}
+  saveSess();render();
+}
+
+app.addEventListener('click',function(e){
+  var el=e.target&&e.target.closest?e.target.closest('[data-act]'):null;
+  if(!el)return;
+  var act=el.getAttribute('data-act');
+  switch(act){
+    case 'n':S.cfg.n=parseInt(el.getAttribute('data-v'),10);saveCfg();render(true);break;
+    case 'start':{
+      var p=pool();if(!p.length)return;
+      var ids=shuffle(p).map(function(q){return q.id});
+      if(S.cfg.n>0&&S.cfg.n<ids.length)ids=ids.slice(0,S.cfg.n);
+      startQuiz(ids,'normal',S.cfg.tema);break;
+    }
+    case 'startErr':{
+      var ei=errIds();if(!ei.length)return;
+      startQuiz(shuffle(ei),'repaso','errores');break;
+    }
+    case 'resume':S.pend=[];S.screen='quiz';render();break;
+    case 'discard':if(confirm('¿Descartar el cuestionario en curso?')){S.sess=null;saveSess();render(true)}break;
+    case 'clearErr':if(confirm('¿Borrar todas las preguntas erradas guardadas?')){LS.set('qz_errores',[]);render(true)}break;
+    case 'opt':{
+      var q=cur();if(S.sess.ans[q.id])return;
+      var i=parseInt(el.getAttribute('data-i'),10);
+      if(q.multi){var p2=S.pend.indexOf(i);if(p2>-1)S.pend.splice(p2,1);else S.pend.push(i);render(true)}
+      else answer([i]);
+      break;
+    }
+    case 'confirm':if(S.pend.length)answer(S.pend.slice());break;
+    case 'next':next();break;
+    case 'exit':S.screen='home';render();break;
+    case 'again':{
+      var w=wrongOf(S.sess);if(!w.length)return;
+      startQuiz(shuffle(w),'repaso','errores de la ronda');break;
+    }
+    case 'newq':S.sess=null;saveSess();S.screen='home';render();break;
+    case 'add':S.screen='add';render();break;
+    case 'back':S.screen='home';render();break;
+    case 'saveAdd':{
+      var ta=document.getElementById('json'),raw=(ta&&ta.value||'').trim();
+      if(!raw){showMsg('Pegá primero el JSON.',true);return}
+      var data;try{data=JSON.parse(raw)}catch(err){showMsg('JSON inválido: '+err.message,true);return}
+      if(data&&!Array.isArray(data)&&Array.isArray(data.preguntas))data=data.preguntas;
+      if(!Array.isArray(data)){showMsg('El JSON debe ser un arreglo de preguntas: [ {...}, {...} ]',true);return}
+      var ex=LS.get('qz_extra',[]),ids2={},okc=0,badc=0,dup=0;
+      S.bank.forEach(function(x){ids2[x.id]=1});
+      data.forEach(function(o){
+        var x=norm(o);
+        if(!x){badc++;return}
+        if(ids2[x.id]){dup++;return}
+        ids2[x.id]=1;ex.push(o);okc++;
+      });
+      LS.set('qz_extra',ex);S.bank=buildBank();indexBank();
+      var txt='Agregadas: '+okc+(dup?' · repetidas (ignoradas): '+dup:'')+(badc?' · inválidas (ignoradas): '+badc:'')+'. Total en el banco: '+S.bank.length+'.';
+      S.screen='add';render(true);showMsg(txt,badc>0&&okc===0);
+      break;
+    }
+    case 'delAdd':
+      if(confirm('¿Borrar todas las preguntas que agregaste vos? (las del banco original no se tocan)')){
+        LS.set('qz_extra',[]);S.bank=buildBank();indexBank();render(true);
+      }
+      break;
+  }
+});
+app.addEventListener('change',function(e){
+  var t=e.target;
+  if(t.id==='tema'){S.cfg.tema=t.value;saveCfg();render(true)}
+  else if(t.id==='mix'){S.cfg.mix=t.checked;saveCfg()}
+});
+
+/* iOS: habilita :active y evita el zoom por gesto */
+document.addEventListener('touchstart',function(){},{passive:true});
+document.addEventListener('gesturestart',function(e){e.preventDefault()});
+
+/* Ícono para "Agregar a pantalla de inicio" (iOS exige PNG: se genera en un canvas) */
+try{
+  var cv=document.createElement('canvas');cv.width=cv.height=180;
+  var cx=cv.getContext('2d'),g=cx.createLinearGradient(0,0,180,180);
+  g.addColorStop(0,'#2563eb');g.addColorStop(1,'#0b1220');
+  cx.fillStyle=g;cx.fillRect(0,0,180,180);
+  cx.fillStyle='#fff';cx.font='bold 62px -apple-system,Helvetica,Arial';cx.textAlign='center';cx.textBaseline='middle';cx.fillText('COM',90,80);
+  cx.fillStyle='#93c5fd';cx.font='bold 24px -apple-system,Helvetica,Arial';cx.fillText('QUIZ',90,128);
+  var lk=document.createElement('link');lk.rel='apple-touch-icon';lk.href=cv.toDataURL('image/png');document.head.appendChild(lk);
+}catch(err){}
+
+/* ================= inicio ================= */
+(function init(){
+  S.bank=buildBank();indexBank();
+  var c=LS.get('qz_cfg',null);
+  if(c&&typeof c==='object'){
+    if([0,5,10,25,50,100].indexOf(c.n)>-1)S.cfg.n=c.n;
+    if(typeof c.tema==='string')S.cfg.tema=c.tema;
+    S.cfg.mix=!!c.mix;
+  }
+  if(S.cfg.tema!=='*'&&!temas().some(function(x){return x.t===S.cfg.tema}))S.cfg.tema='*';
+  var s=LS.get('qz_sesion',null);
+  if(s&&Array.isArray(s.ids)&&s.ans&&s.ord){
+    s.ids=s.ids.filter(function(id){return !!S.byId[id]});
+    if(s.ids.length&&s.idx<s.ids.length){S.sess=s;if(s.done)S.screen='result'}
+  }
+  render();
+})();
+})();
+</script>
+</body>
+</html>
